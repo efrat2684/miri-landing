@@ -1,0 +1,23 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: Heebo, Arial, sans-serif;
+  background: #f4f0e8;
+  color: #1c1915;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}

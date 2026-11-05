@@ -1,0 +1,105 @@
+<div class="page">
+  <header class="top">
+    <a class="brand" href="#top">{{ name }}</a>
+    <button class="btn btn-small" type="button" (click)="scrollToContact()">יצירת קשר</button>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <p class="eyebrow">סטודיו לעריכה</p>
+      <h1>{{ name }}</h1>
+      <p class="headline">{{ headline }}</p>
+      <p class="lead">{{ lead }}</p>
+      <button class="btn" type="button" (click)="scrollToContact()">בואו נדבר על הפרויקט</button>
+    </section>
+
+    <section class="services" aria-labelledby="services-title">
+      <div class="section-head">
+        <h2 id="services-title">מה אפשר לערוך</h2>
+        <p>עבודה נקייה, קצב נכון, ותוצאה שאפשר לפרסם בלי עוד סבב תיקונים.</p>
+      </div>
+      <ul>
+        @for (service of services; track service.id) {
+          <li>
+            <h3>{{ service.title }}</h3>
+            <p>{{ service.text }}</p>
+          </li>
+        }
+      </ul>
+    </section>
+
+    <section class="about" aria-labelledby="about-title">
+      <h2 id="about-title">איך זה עובד</h2>
+      <p>
+        שולחים חומר גלם וכיוון — סגנון, קהל, ואורך. מירי עורכת עם כלי AI ועין מקצועית,
+        ומחזירה גרסה מוכנה: תמונה, סרטון, שיר, או שילוב ביניהם.
+      </p>
+    </section>
+
+    <section class="contact" id="contact" aria-labelledby="contact-title">
+      <div class="section-head">
+        <h2 id="contact-title">יצירת קשר</h2>
+        <p>ספרו בקצרה מה צריך לערוך. הפנייה תישלח ישירות למייל של מירי.</p>
+      </div>
+
+      @if (submitted) {
+        <div class="thanks" role="status">
+          <h3>תודה, {{ form.controls.name.value }}.</h3>
+          <p>הפנייה נשלחה בהצלחה. נחזור אליכם בהקדם.</p>
+          <button class="btn btn-ghost" type="button" (click)="editAgain()">עריכת הפנייה</button>
+        </div>
+      } @else {
+        <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+          @if (submitError) {
+            <p class="form-error" role="alert">{{ submitError }}</p>
+          }
+          <label>
+            שם מלא
+            <input type="text" formControlName="name" autocomplete="name" [attr.aria-invalid]="invalid('name')" />
+            @if (invalid('name')) {
+              <span class="error">נא למלא שם של שני תווים לפחות.</span>
+            }
+          </label>
+
+          <label>
+            אימייל
+            <input type="email" formControlName="email" autocomplete="email" [attr.aria-invalid]="invalid('email')" />
+            @if (invalid('email')) {
+              <span class="error">נא למלא כתובת אימייל תקינה.</span>
+            }
+          </label>
+
+          <label>
+            טלפון
+            <input type="tel" formControlName="phone" autocomplete="tel" />
+          </label>
+
+          <label>
+            סוג העבודה
+            <select formControlName="service">
+              @for (service of services; track service.id) {
+                <option [value]="service.id">{{ service.title }}</option>
+              }
+            </select>
+          </label>
+
+          <label class="full">
+            מה צריך לערוך
+            <textarea formControlName="message" rows="5" [attr.aria-invalid]="invalid('message')"></textarea>
+            @if (invalid('message')) {
+              <span class="error">נא לכתוב לפחות משפט קצר על העבודה.</span>
+            }
+          </label>
+
+          <button class="btn" type="submit" [disabled]="sending">
+            {{ sending ? 'שולחים…' : 'שליחת פנייה' }}
+          </button>
+        </form>
+      }
+    </section>
+  </main>
+
+  <footer>
+    <p>{{ name }} · {{ headline }}</p>
+  </footer>
+</div>
