@@ -1,0 +1,12 @@
+@MiriLanding.Api_HostAddress = http://localhost:5053
+
+POST {{MiriLanding.Api_HostAddress}}/api/contact
+Content-Type: application/json
+
+{
+  "name": "בדיקה",
+  "email": "test@example.com",
+  "phone": "050-0000000",
+  "service": "images",
+  "message": "זו הודעת בדיקה מהשרת."
+}

@@ -1,17 +1,27 @@
-# Miri Landing — Client (Angular)
+# Miri Landing
 
-Landing page for Miri Koler. The contact form calls the backend API.
+Monorepo: **Angular client** (repo root) + **ASP.NET API** (`api/`).
+
+## Structure
+
+```
+/
+  api/                 # Server (C#) — use this as Root Directory on Render
+  src/                 # Client (Angular)
+  angular.json
+  package.json
+```
 
 ## Run locally
 
-Terminal 1 — API (folder `api/`, separate Git repo):
+**API:**
 
 ```powershell
 cd api
 dotnet run --launch-profile http
 ```
 
-Terminal 2 — this client:
+**Client:**
 
 ```powershell
 npm install
@@ -20,8 +30,28 @@ npm start
 
 Open: http://localhost:4200
 
-Dev API URL is configured in `src/environments/environment.ts` (`http://localhost:5053/api`).
+## Deploy server to Render (monorepo)
 
-## Server repository
+One GitHub repo is fine. In Render **Web Service** settings:
 
-Backend source lives in a **separate GitHub repo** for cloud deployment (`miri-landing-api`).
+| Setting | Value |
+|---------|--------|
+| **Root Directory** | `api` |
+| **Runtime** | .NET |
+| **Build Command** | `dotnet publish -c Release -o out` |
+| **Start Command** | `dotnet out/MiriLanding.Api.dll` |
+
+Add environment variables (see `api/README.md`):
+
+`Email__Smtp__User`, `Email__Smtp__Password`, `Email__Recipient`, etc.
+
+After deploy, set the client production API URL in `src/environments/environment.prod.ts` to your Render URL.
+
+## GitHub
+
+Single repository, for example: `miri-landing`
+
+```powershell
+git remote set-url origin https://github.com/efrat2684/miri-landing.git
+git push -u origin main
+```
