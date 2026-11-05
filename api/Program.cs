@@ -8,13 +8,18 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IContactEmailSender, ContactEmailSender>();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("Frontend", policy =>
-        policy
-            .SetIsOriginAllowed(origin =>
-                Uri.TryCreate(origin, UriKind.Absolute, out var uri)
-                && (uri.Host is "localhost" or "127.0.0.1"))
-            .AllowAnyHeader()
-            .AllowAnyMethod());
+  options.AddPolicy("Frontend", policy =>
+      policy
+          .SetIsOriginAllowed(origin =>
+          {
+            if (Uri.TryCreate(origin, UriKind.Absolute, out var uri))
+            {
+              return uri.Host is "localhost" or "127.0.0.1" || uri.Host.EndsWith("netlify.app");
+            }
+            return false;
+          })
+          .AllowAnyHeader()
+          .AllowAnyMethod());
 });
 var app = builder.Build();
 
