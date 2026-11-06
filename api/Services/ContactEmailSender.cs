@@ -61,6 +61,9 @@ public sealed class ContactEmailSender : IContactEmailSender
         };
 
         using var client = new SmtpClient();
+        var timeoutMs = Math.Clamp(_options.Smtp.TimeoutMilliseconds, 5_000, 60_000);
+        client.Timeout = timeoutMs;
+
         await client.ConnectAsync(_options.Smtp.Host, _options.Smtp.Port, SecureSocketOptions.StartTls, cancellationToken);
         await client.AuthenticateAsync(smtpUser, smtpPassword, cancellationToken);
         await client.SendAsync(message, cancellationToken);

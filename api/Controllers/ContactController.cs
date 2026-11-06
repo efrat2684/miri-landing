@@ -48,10 +48,21 @@ public sealed class ContactController : ControllerBase
 
             var message = ex.Message.Contains("BadCredentials", StringComparison.OrdinalIgnoreCase)
                 || ex.Message.Contains("Username and Password not accepted", StringComparison.OrdinalIgnoreCase)
-                ? "Gmail דחה את סיסמת האפליקציה. צרו App Password חדשה ב-Google, עדכנו User Secrets והפעילו מחדש את השרת."
-                : "שליחת המייל נכשלה. בדקו את הגדרות Gmail והפעילו מחדש את השרת.";
+                ? "Gmail דחה את סיסמת האפליקציה. צרו App Password חדשה ב-Google, עדכנו את משתני הסביבה ב-Render והפעילו מחדש."
+                : IsLikelySmtpTimeoutOrBlock(ex)
+                    ? "חיבור ל-Gmail SMTP נכשל או נחסם מהענן (יציאה לפורט 587). בדקו שסיסמת האפליקציה נכונה; אם עדיין נכשל — שקלו שירות מייל עם HTTPS (SendGrid/Mailgun) או שרת עם יציאה פתוחה."
+                    : "שליחת המייל נכשלה. בדקו את הגדרות Gmail ב-Render והפעילו מחדש את השירות.";
 
             return StatusCode(StatusCodes.Status502BadGateway, new { message });
         }
+    }
+
+    private static bool IsLikelySmtpTimeoutOrBlock(Exception ex)
+    {
+        var msg = ex.ToString();
+        return msg.Contains("timed out", StringComparison.OrdinalIgnoreCase)
+            || msg.Contains("Timeout", StringComparison.OrdinalIgnoreCase)
+            || msg.Contains("reset", StringComparison.OrdinalIgnoreCase)
+            || msg.Contains("Could not connect", StringComparison.OrdinalIgnoreCase);
     }
 }

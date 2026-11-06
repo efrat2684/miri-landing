@@ -19,6 +19,9 @@ public sealed class SmtpOptions
 
     public int Port { get; init; } = 587;
 
+    /// <summary>MailKit timeout in milliseconds; default 25s so cloud proxies do not wait 2 minutes.</summary>
+    public int TimeoutMilliseconds { get; init; } = 25_000;
+
     public string User { get; init; } = string.Empty;
 
     public string Password { get; init; } = string.Empty;
