@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using MiriLanding.Api.Models;
 using MiriLanding.Api.Services;
@@ -5,6 +6,7 @@ using MiriLanding.Api.Services;
 namespace MiriLanding.Api.Controllers;
 
 [ApiController]
+[EnableCors("Frontend")]
 [Route("api/[controller]")]
 public sealed class ContactController : ControllerBase
 {
@@ -16,6 +18,9 @@ public sealed class ContactController : ControllerBase
         _emailSender = emailSender;
         _logger = logger;
     }
+
+    [HttpOptions]
+    public IActionResult Preflight() => NoContent();
 
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] ContactRequest request, CancellationToken cancellationToken)

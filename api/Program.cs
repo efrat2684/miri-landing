@@ -11,19 +11,16 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IContactEmailSender, ContactEmailSender>();
 builder.Services.AddCors(options =>
 {
-  options.AddPolicy("Frontend", policy =>
-      policy
-          .SetIsOriginAllowed(origin =>
-          {
-            if (Uri.TryCreate(origin, UriKind.Absolute, out var uri))
-            {
-              return uri.Host is "localhost" or "127.0.0.1" || uri.Host.EndsWith("netlify.app");
-            }
-            return false;
-          })
-          .AllowAnyHeader()
-          .AllowAnyMethod());
+    options.AddPolicy("Frontend", policy =>
+        policy
+            .WithOrigins(
+                "https://fabulous-yeot-f30b25.netlify.app",
+                "http://localhost:4200",
+                "http://127.0.0.1:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod());
 });
+
 var app = builder.Build();
 
 var emailConfigured = !string.IsNullOrWhiteSpace(app.Configuration["Email:Smtp:User"])
@@ -37,6 +34,7 @@ else
     app.Logger.LogWarning("Email SMTP is not configured. Set User Secrets or environment variables, then restart the API.");
 }
 
+app.UseRouting();
 app.UseCors("Frontend");
 app.MapControllers();
 
