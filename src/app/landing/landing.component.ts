@@ -103,7 +103,7 @@ export class LandingComponent {
     }
 
     if (error.status === 0) {
-      return 'לא ניתן להתחבר לשרת. ודאו שה-API רץ: npm run start:api';
+      return 'לא ניתן להתחבר לשרת ב-Render. בדקו שהאתר נבנה מחדש ב-Netlify, שה-API לא «ישן» (Free tier), וש-CORS כולל netlify.app.';
     }
 
     if (body && typeof body === 'object' && 'message' in body && typeof body.message === 'string') {
