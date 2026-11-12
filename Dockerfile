@@ -1,8 +1,8 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
-COPY MiriLanding.Api.csproj ./
+COPY api/MiriLanding.Api.csproj ./
 RUN dotnet restore MiriLanding.Api.csproj
-COPY . ./
+COPY api/ ./
 RUN dotnet publish MiriLanding.Api.csproj -c Release -o /app/publish /p:UseAppHost=false
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
